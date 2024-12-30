@@ -4,6 +4,7 @@ import { getStoreName } from './DaoConst.js';
 import { formatDate } from './Date.js';
 import { priority } from './Constants.js';
 import Card from './Card';
+import Persistence from './Persistence';
 
 const Form=()=>{
   const [task, setTask] = useState({'title':'','description':'','priority':0,'status':'PENDING','created_at':'','in_progress_at':'','completed_at':''});
@@ -69,6 +70,7 @@ const Form=()=>{
     <Card nodes={{'prev':'PENDING','next':'COMPLETED'}} cellClickFunc={updateStatus} cell="bg-green-200 " data={taskList.filter(a=>a.status==='IN_PROGRESS')} label={{'title':'In Progress','color':'bg-blue-500'}} css="flex-1 border-2 rounded-lg border-blue-500"/>
     <Card nodes={{'prev':'IN_PROGRESS','next':null}} cellClickFunc={updateStatus}  cell="bg-blue-500" data={taskList.filter(a=>a.status==='COMPLETED').sort((a,b)=>new Date(b.completed_at) - new Date(a.completed_at))} label={{'title':'Completed','color':'bg-blue-500'}} css="flex-1 border-2 rounded-lg border-blue-500"/>
     </div>
+    <div className="flex">
     <div id="input-form" className="p-10 border w-[1000px] border-gray-300">
     <div>
       TITLE:
@@ -87,6 +89,11 @@ const Form=()=>{
     </div>
     <button className="bg-green-500 text-white p-2 rounded hover:bg-blue-600" onClick={handleSubmit}>submit</button>
     </div>
-    </>)
+    <div id="persistence-section" className="w-[900px] bg-red-500">
+      <Persistence/>
+    </div>
+
+    </div>
+        </>)
 }
 export default Form;
