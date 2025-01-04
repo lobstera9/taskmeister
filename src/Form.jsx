@@ -2,7 +2,7 @@ import { useState,useEffect } from 'react';
 import { addData,getAllData,deleteDataById,updateData,getById } from './Dao.js';
 import { getStoreName } from './DaoConst.js';
 import { formatDate } from './Date.js';
-import { priority } from './Constants.js';
+import { priority,getCss } from './Constants.js';
 import Card from './Card';
 import Persistence from './Persistence';
 
@@ -87,12 +87,11 @@ const Form=()=>{
     <div>
     <textarea className="border border-gray-300" value={task.description} name="description" rows="10" cols="50" placeholder='enter description' onChange={handleChange}/>
     </div>
-    <button className="bg-green-500 text-white p-2 rounded hover:bg-blue-600" onClick={handleSubmit}>submit</button>
-    </div>
-    <div id="persistence-section" className="w-[900px] bg-red-500">
-      <Persistence/>
-    </div>
-
+    <button className={getCss('btnSave')} onClick={handleSubmit}>submit</button>
+      <div id="persistence-section" className="w-[900px]">
+        <Persistence/>
+      </div>
+      </div>
     </div>
         </>)
 }

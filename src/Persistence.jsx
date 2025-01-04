@@ -1,5 +1,6 @@
 import { useState,useEffect } from 'react';
 import { clearTable,exportDump,importDump } from './Dao.js';
+import { getCss } from './Constants.js';
 const Persistence=()=>{
   const[dumpExport,setDumpExport] = useState([]);
   const[fileContent,setFileContent] = useState(null);
@@ -49,10 +50,10 @@ const Persistence=()=>{
       exportData();
     }
   },[dumpExport]);
-  return(<>
-    <button onClick={handleExport}>EXPORT</button>
-    <input type="file" onChange={handleFileChange}/>
-    {(Array.isArray(fileContent) && fileContent?.length > 0)?<button onClick={importData}>ImportData</button>:<></>}
-    </>)
+  return(<div className="p-2">
+    <button className={getCss('btnSave')} onClick={handleExport}>Save</button>
+    <input className={getCss('btnBrowser')} type="file" onChange={handleFileChange}/>
+    {(Array.isArray(fileContent) && fileContent?.length > 0)?<button className={getCss('btnImport')} onClick={importData}>ImportData</button>:<></>}
+    </div>)
 }
 export default Persistence;
