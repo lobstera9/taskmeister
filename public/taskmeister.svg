@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="43.573 150.327 365.468 139.433">
+  <defs>
+    <view id="view-1" viewBox="763.617 288.671 11.438 0.545">
+      <title>View 1</title>
+    </view>
+  </defs>
+  <g>
+    <rect x="46.841" y="152.505" width="360.022" height="134.532" style="stroke: rgb(0, 0, 0); fill: rgb(179, 167, 167);"/>
+    <text style="font-family: Comfortaa; font-size: 47px; font-weight: 500; white-space: pre;" transform="matrix(1.043597, 0, 0, 2.260417, -2.156812, -209.750565)" x="49.472" y="207.808">TASKMEISTER</text>
+  </g>
+  <animate attributeName="viewBox" values="43.573 150.327 365.468 139.433; 43.573 150.327 365.468 139.433" dur="4.01s" fill="freeze" begin="0.12s"/>
+  <animate attributeName="color-interpolation" values="auto;sRGB" begin="0.16s" dur="1s" calcMode="discrete" keyTimes="0; 0.57223"/>
+  <animate attributeName="y" values="0;0" begin="0.12s" dur="5.12s" fill="freeze" calcMode="spline" keyTimes="0; 1" keySplines="0.25 0.1 0.25 1"/>
+</svg>
