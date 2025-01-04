@@ -1,7 +1,8 @@
-export const formatDate=(date)=>{
-  if(!date){
+export const formatDate=(dt)=>{
+  if(!dt){
     return '';
   }
+  var date = new Date(dt);
   // Get the full year (4 digits)
   const year = date.getFullYear();
 
@@ -15,11 +16,11 @@ export const formatDate=(date)=>{
   return `${year}-${month}-${day}`;
 }
 
-export const formatDateTime = (date) => {
-  if (!date) {
+export const formatDateTime = (dt) => {
+  if (!dt) {
     return '';
   }
-
+  var date = new Date(dt);
   // Get the full year (4 digits)
   const year = date.getFullYear();
 

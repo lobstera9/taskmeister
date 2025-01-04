@@ -5,5 +5,4 @@ export const stores = new Map([
 ]);
 
 export const getStoreName =(name)=>{
-  return stores.get(name)?.name;
-}
+  return stores.get(name)?.name;}

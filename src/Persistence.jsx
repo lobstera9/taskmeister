@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
+import { clearTable,exportDump,importDump } from './Dao.js';
 const Persistence=()=>{
-  const[fileData,setFileData] = useState([{'table_name':null,'table_data':[]}]);
+  const[dumpExport,setDumpExport] = useState([]);
   const[fileContent,setFileContent] = useState(null);
   const handleFileChange = async(e) => {
     const file = e.target.files[0];
@@ -8,7 +9,11 @@ const Persistence=()=>{
       const reader = new FileReader();
       reader.onload = () => {
         var content = reader.result
-        setFileContent(content);
+        try{
+          setFileContent(JSON.parse(content));
+        }catch(e){
+          console.log(e);
+        }
         console.log(fileContent);
       };
       reader.onerror = () => {
@@ -17,9 +22,37 @@ const Persistence=()=>{
       await reader.readAsText(file);
     }
   };
+  var handleExport=async()=>{
+    var data = await exportDump();
+    await setDumpExport(data);
+  }
+
+  var importData=()=>{
+    console.log('importing data');
+    importDump(fileContent);
+    window.location.reload();
+  }
+
+  const exportData = () => {
+    const jsonString = `data:text/json;chatset=utf-8,${encodeURIComponent(
+      JSON.stringify(dumpExport)
+    )}`;
+    const link = document.createElement("a");
+    link.href = jsonString;
+    link.download = "taskmeister.json";
+    link.click();
+    setDumpExport([]);
+  };
+
+  useEffect(()=>{
+    if(Array.isArray(dumpExport) && dumpExport.length>0){
+      exportData();
+    }
+  },[dumpExport]);
   return(<>
+    <button onClick={handleExport}>EXPORT</button>
     <input type="file" onChange={handleFileChange}/>
-    <div>{fileContent}</div>
+    {(Array.isArray(fileContent) && fileContent?.length > 0)?<button onClick={importData}>ImportData</button>:<></>}
     </>)
 }
 export default Persistence;

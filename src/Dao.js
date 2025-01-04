@@ -23,7 +23,7 @@ const createConnection = async()=>{
   request.onupgradeneeded = (event)=>{
     let db = event.target.result;
     stores.forEach((value,key)=>{
-      if(!db.objectStoreNames.contains(value.nbme)){
+      if(!db.objectStoreNames.contains(value.name)){
         var objectStore = db.createObjectStore(value.name,{keyPath:value.keyPath,autoIncrement:value.autoIncrement});
       }
     });
@@ -143,4 +143,54 @@ export const updateData = async(object,store)=>{
     console.log(e);
   }
 
+}
+
+export const importDump=async(data)=>{
+  data.forEach(async(a)=>{
+    if(!a)
+      return;
+    var table = a.table_name;
+    await clearTable(table);
+    a.table_data?.forEach(data=>{
+      addData(data,table);
+    });
+  });
+}
+
+export const exportDump=async()=>{
+  var request = await indexedDB.open(schema);
+  return new Promise((resolve,reject)=>{
+    request.onsuccess=async(event)=>{
+      var db = event.target.result;
+      var stores = db.objectStoreNames;
+      var data=[];
+      for(const store of stores){
+        var storeDump = await getAllData(store);
+        var dumpData = {
+          'table_name':store,
+          'table_data':storeDump
+        };
+        data.push(dumpData);
+      }
+      resolve(data);
+    }
+    request.onerror=(event)=>{
+      new Error(event.target.error);
+      reject(null);
+    }
+  });
+}
+
+export const clearTable=async(store)=>{
+  var request = await indexedDB.open(schema);
+  request.onsuccess=(event)=>{
+    var db = event.target.result;
+    var transaction = db.transaction([store],"readwrite");
+    var objectStore = transaction.objectStore(store);
+    objectStore.clear();
+  }
+  request.onerror=(event)=>{
+    console.log(event.target.error);
+    new Error("unable to open database");
+  }
 }
