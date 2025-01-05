@@ -1,8 +1,7 @@
 import { useState,useEffect } from 'react';
-import { clearTable,exportDump,importDump } from './Dao.js';
+import { clearTable,exportDump,importDump,reInitializeStore } from './Dao.js';
 import { getCss } from './Constants.js';
 const Persistence=()=>{
-  const[dumpExport,setDumpExport] = useState([]);
   const[fileContent,setFileContent] = useState(null);
   const handleFileChange = async(e) => {
     const file = e.target.files[0];
@@ -25,7 +24,7 @@ const Persistence=()=>{
   };
   var handleExport=async()=>{
     var data = await exportDump();
-    await setDumpExport(data);
+    exportData(data);
   }
 
   var importData=()=>{
@@ -34,26 +33,28 @@ const Persistence=()=>{
     window.location.reload();
   }
 
-  const exportData = () => {
+  const exportData = (data) => {
     const jsonString = `data:text/json;chatset=utf-8,${encodeURIComponent(
-      JSON.stringify(dumpExport)
+      JSON.stringify(data)
     )}`;
     const link = document.createElement("a");
     link.href = jsonString;
     link.download = "taskmeister.json";
     link.click();
-    setDumpExport([]);
   };
 
-  useEffect(()=>{
-    if(Array.isArray(dumpExport) && dumpExport.length>0){
-      exportData();
-    }
-  },[dumpExport]);
+  var handleNew=async()=>{
+    debugger;
+    await handleExport();
+    await reInitializeStore();
+    window.location.reload();
+  }
+
   return(<div className="p-2">
     <button className={getCss('btnSave')} onClick={handleExport}>Save</button>
     <input className={getCss('btnBrowser')} type="file" onChange={handleFileChange}/>
     {(Array.isArray(fileContent) && fileContent?.length > 0)?<button className={getCss('btnImport')} onClick={importData}>ImportData</button>:<></>}
+    <button onClick={handleNew} className={getCss('btnNew')}>NEW</button>
     </div>)
 }
 export default Persistence;

@@ -171,7 +171,7 @@ export const exportDump=async()=>{
           'table_data':storeDump
         };
         data.push(dumpData);
-      }
+    }
       resolve(data);
     }
     request.onerror=(event)=>{
@@ -179,6 +179,20 @@ export const exportDump=async()=>{
       reject(null);
     }
   });
+}
+
+export const reInitializeStore=async()=>{
+  var request = indexedDB.open(schema);
+  request.onsuccess=(event)=>{
+    var db = event.target.result;
+    var stores = db.objectStoreNames;
+    for(const store of stores){
+      clearTable(store);
+    }
+  }
+  request.onerror=(event)=>{
+    console.log(event.target.error);
+  }
 }
 
 export const clearTable=async(store)=>{
