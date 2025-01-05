@@ -6,7 +6,8 @@ export const compCss = new Map([
   ['btnSave',"bg-green-500 text-white p-2 rounded hover:bg-blue-600"],
   ['btnBrowse',"bg-gray-500 p-2 text-white font-semibold py-2 px-4 rounded-md cursor-pointer hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-400"],
   ['btnImport',"bg-blue-500 p-2 text-white font-semibold py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400"],
-  ['btnNew',"bg-red-500 text-white p-2 rounded hover:bg-gray-600"]
+  ['btnNew',"bg-gray-900 text-white p-2 rounded hover:bg-gray-600"],
+  ['btnClear',"bg-red-500 text-white p-2 rounded hover:bg-gray-600"]
 ])
 
 export const getCss = (name)=>{

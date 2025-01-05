@@ -1,16 +1,21 @@
 import { useState,useEffect } from 'react';
-import { clearTable,exportDump,importDump,reInitializeStore } from './Dao.js';
+import { clearTable,addData,getAllData,exportDump,importDump,reInitializeStore } from './Dao.js';
+import { getStoreName } from './DaoConst.js';
 import { getCss } from './Constants.js';
 const Persistence=()=>{
   const[fileContent,setFileContent] = useState(null);
+  const[fileName,setFileName] = useState({'fileName':null});
   const handleFileChange = async(e) => {
     const file = e.target.files[0];
+    const fileName = e.target.files[0]?.name;
     if (file) {
       const reader = new FileReader();
       reader.onload = () => {
         var content = reader.result
         try{
           setFileContent(JSON.parse(content));
+          var data ={'fileName':fileName};
+          setFileName(data);
         }catch(e){
           console.log(e);
         }
@@ -27,25 +32,35 @@ const Persistence=()=>{
     exportData(data);
   }
 
-  var importData=()=>{
+  var importData=async()=>{
+    debugger;
     console.log('importing data');
+    console.log(getStoreName('file_store'));
     importDump(fileContent);
+    await addData(fileName,getStoreName('file_store'));
     window.location.reload();
   }
 
-  const exportData = (data) => {
+  const exportData = async(data) => {
+    debugger;
+    var file = await getAllData(getStoreName('file_store'));
+    var fileName = file[0];
+    let importedFileName = fileName?fileName.fileName:'TaskMeister.json';
     const jsonString = `data:text/json;chatset=utf-8,${encodeURIComponent(
       JSON.stringify(data)
     )}`;
     const link = document.createElement("a");
     link.href = jsonString;
-    link.download = "taskmeister.json";
+    link.download = importedFileName;
     link.click();
   };
 
   var handleNew=async()=>{
-    debugger;
     await handleExport();
+    await reInitializeStore();
+    window.location.reload();
+  }
+  var handleClear=async()=>{
     await reInitializeStore();
     window.location.reload();
   }
@@ -55,6 +70,7 @@ const Persistence=()=>{
     <input className={getCss('btnBrowser')} type="file" onChange={handleFileChange}/>
     {(Array.isArray(fileContent) && fileContent?.length > 0)?<button className={getCss('btnImport')} onClick={importData}>ImportData</button>:<></>}
     <button onClick={handleNew} className={getCss('btnNew')}>NEW</button>
+    <button onClick={handleClear} className={getCss('btnClear')}>CLEAR WORKSPACE</button>
     </div>)
 }
 export default Persistence;

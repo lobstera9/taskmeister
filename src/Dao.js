@@ -1,4 +1,4 @@
-import { schema,getStoreName,stores } from './DaoConst.js'
+import { schema,cur_version,getStoreName,stores } from './DaoConst.js'
 const dbErrorEvent = (event)=>{
   alert(event.target.error?.message);
   console.log(event.target.error?.message);
@@ -14,7 +14,7 @@ const onerror = (event)=>{
 const createConnection = async()=>{
   var db;
   var request;
-  request = await indexedDB.open(schema);
+  request = await indexedDB.open(schema,cur_version);
   request.onsuccess=(event)=>{
     db=event.target.result;
     db.onerror=onerror;
@@ -35,8 +35,10 @@ await createConnection();
 
 export const addData =async(object, store)=>{
   try{
-    var request = await indexedDB.open(schema);
+    console.log("Initiating a db open request for Schema ",schema," with veriosn ",cur_version," to save object ",object," in store ",store);
+    var request = await indexedDB.open(schema,cur_version);
     request.onsuccess=(event)=>{
+      debugger;
       var db = event.target.result;
       var transaction = db.transaction([store],"readwrite");
       var objectStore = transaction.objectStore(store);
@@ -45,16 +47,18 @@ export const addData =async(object, store)=>{
 
     }
     request.onerror=(event)=>{
+      debugger;
       new Error("unable to open database");
     }
   }catch(e){
+    debugger;
     console.log(e);
   }
 }
 
 export const getAllData = async(store)=>{
   try{
-      var request = await indexedDB.open(schema);
+      var request = await indexedDB.open(schema,cur_version);
       var data = new Promise((response,reject)=>{
       request.onsuccess= async(event)=>{
         var db = event.target.result;
@@ -83,7 +87,7 @@ export const getAllData = async(store)=>{
 
 export const getById = async(id,store)=>{
   try{
-      var request = await indexedDB.open(schema);
+      var request = await indexedDB.open(schema,cur_version);
       var data = new Promise((response,reject)=>{
       request.onsuccess= async(event)=>{
         var db = event.target.result;
@@ -112,7 +116,7 @@ export const getById = async(id,store)=>{
 
 export const deleteDataById = async(id,store)=>{
   try{
-    var request = await indexedDB.open(schema);
+    var request = await indexedDB.open(schema,cur_version);
     request.onsuccess=(event)=>{
       var db = event.target.result;
       var transaction = db.transaction([store],"readwrite");
@@ -129,7 +133,7 @@ export const deleteDataById = async(id,store)=>{
 }
 export const updateData = async(object,store)=>{
   try{
-    var request = await indexedDB.open(schema);
+    var request = await indexedDB.open(schema,cur_version);
     request.onsuccess=(event)=>{
       var db = event.target.result;
       var transaction = db.transaction([store],"readwrite");
@@ -158,7 +162,7 @@ export const importDump=async(data)=>{
 }
 
 export const exportDump=async()=>{
-  var request = await indexedDB.open(schema);
+  var request = await indexedDB.open(schema,cur_version);
   return new Promise((resolve,reject)=>{
     request.onsuccess=async(event)=>{
       var db = event.target.result;
@@ -182,7 +186,7 @@ export const exportDump=async()=>{
 }
 
 export const reInitializeStore=async()=>{
-  var request = indexedDB.open(schema);
+  var request = indexedDB.open(schema,cur_version);
   request.onsuccess=(event)=>{
     var db = event.target.result;
     var stores = db.objectStoreNames;
@@ -196,7 +200,7 @@ export const reInitializeStore=async()=>{
 }
 
 export const clearTable=async(store)=>{
-  var request = await indexedDB.open(schema);
+  var request = await indexedDB.open(schema,cur_version);
   request.onsuccess=(event)=>{
     var db = event.target.result;
     var transaction = db.transaction([store],"readwrite");
