@@ -7,7 +7,8 @@ export const compCss = new Map([
   ['btnBrowse',"bg-gray-500 p-2 text-white font-semibold py-2 px-4 rounded-md cursor-pointer hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-400"],
   ['btnImport',"bg-blue-500 p-2 text-white font-semibold py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400"],
   ['btnNew',"bg-gray-900 text-white p-2 rounded hover:bg-gray-600"],
-  ['btnClear',"bg-red-500 text-white p-2 rounded hover:bg-gray-600"]
+  ['btnClear',"bg-red-500 text-white p-2 rounded hover:bg-gray-600"],
+  ['btnEdit',"h-5 w-5 text-lime-100 bg-gray-900 rounded-lg"]
 ])
 
 export const getCss = (name)=>{

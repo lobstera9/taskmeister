@@ -2,12 +2,16 @@ import { useState,useEffect } from 'react';
 import { addData,getAllData,deleteDataById,updateData,getById } from './Dao.js';
 import { getStoreName } from './DaoConst.js';
 import { formatDate } from './Date.js';
+import { SignalIcon } from '@heroicons/react/24/solid';
 import { priority,getCss } from './Constants.js';
 import Card from './Card';
 import Persistence from './Persistence';
 
 const Form=()=>{
-  const [task, setTask] = useState({'title':'','description':'','priority':0,'status':'PENDING','created_at':'','in_progress_at':'','completed_at':''});
+  const [task, setTask] = useState({'title':'','domain_name':'','description':'','priority':0,'status':'PENDING','created_at':'','in_progress_at':'','completed_at':''});
+  const [domainEdit,setDomainEdit] = useState(false);
+  const [domains,setDomains] = useState([]);
+  const [domain,setDomain] = useState({'domain_name':''});
   const [taskList,setTaskList] = useState([]);
   useEffect(()=>{
     populateTaskList();
@@ -15,6 +19,16 @@ const Form=()=>{
   const populateTaskList=async()=>{
     var data = await getAllData(getStoreName('task_store'));
     setTaskList(data);
+    var domainsData = await getAllData(getStoreName('domain_store'));
+    setDomains(domainsData);
+  }
+  const handleDomainChange=(arg)=>{
+    setDomain(
+      {
+        ...domain,
+        [arg.target.name]:arg.target.value
+      }
+    )
   }
   const handleSubmit=()=>{
     var data = {
@@ -24,10 +38,11 @@ const Form=()=>{
       'title':task.title,
       'description':task.description,
       'priority':task.priority,
-      'status':task.status
+      'status':task.status,
+      'domain_name':task.domain_name
     }
     addData(data,getStoreName('task_store'));
-    setTask({'title':'','description':'','priority':0,'status':'PENDING','created_at':'','in_progress_at':'','completed_at':''});
+    setTask({'title':'','description':'','priority':0,'status':'PENDING','created_at':'','in_progress_at':'','completed_at':'','domain_name':''});
     populateTaskList();
   }
   const handleChange =(arg)=>{
@@ -64,6 +79,16 @@ const Form=()=>{
       populateTaskList();
     }
   }
+  
+  const handleDomainEdit=async()=>{
+    setDomainEdit(!domainEdit);
+    if(domainEdit && domain.domain_name && domain.domain_name!==''){
+      await addData(domain,getStoreName('domain_store'));
+      await populateTaskList();
+      setDomain({'domain_name':''})
+    }
+  }
+
   return(<>
     <div id="display-sect" className="p-2 flex space-x-4">
     <Card nodes={{'prev':null,'next':'IN_PROGRESS'}} cellClickFunc={updateStatus} cell="bg-white-700 " data={taskList.filter(a=>a.status==='PENDING').sort((a,b)=>b.priority-a.priority)} label={{'title':'Pending','color':'bg-blue-500'}} css="flex-1 border-2 rounded-lg border-blue-500"/>
@@ -84,6 +109,15 @@ const Form=()=>{
     })}
     </select>
     </div>
+    <div className="flex">
+      DOMAIN:
+    <select value={task.domain_name} className="border border-gray-300" name='domain_name' onChange={handleChange}>
+        {domains.map((val,index)=>{
+        return(<option key={val.domain_name} value={val.domain_name}>{val.domain_name}</option>)
+        })}
+    </select>
+    {!domainEdit?<button onClick={handleDomainEdit} className={getCss('btnSave')}>ADD DOMAIN</button>:<><input type="text" name="domain_name" value={domain.domain_name} onChange={handleDomainChange} placeholder='enter domain name'/><SignalIcon onClick={handleDomainEdit} className={getCss('btnEdit')}/></>}
+        </div>
     <div>
     <textarea className="border border-gray-300" value={task.description} name="description" rows="10" cols="50" placeholder='enter description' onChange={handleChange}/>
     </div>
