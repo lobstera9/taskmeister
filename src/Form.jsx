@@ -39,6 +39,7 @@ const Form=()=>{
       'description':task.description,
       'priority':task.priority,
       'status':task.status,
+      'diagram':null,
       'domain_name':task.domain_name
     }
     addData(data,getStoreName('task_store'));

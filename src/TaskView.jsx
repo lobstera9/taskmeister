@@ -7,8 +7,10 @@ import { SignalIcon } from '@heroicons/react/24/solid';
 import { getById,deleteDataById,updateData,getAllData } from './Dao.js';
 import { getStoreName } from './DaoConst.js';
 import { useNavigate } from 'react-router-dom';
+import { getCss } from './Constants.js';
 import Markdown from './Markdown';
 import MarkdownRenderer from './MarkdownRenderer';
+import Mermaid from './Mermaid';
 
 const TaskView=()=>{
   const navigate = useNavigate();
@@ -84,6 +86,60 @@ const TaskView=()=>{
     //var rowCss = "flex items-center space-x-4 mb-4";
     var rowCss = "flex items-center space-x-4 mb-4 p-2 rounded-lg bg-gray-100 hover:bg-gray-200 transition-all duration-300";
     var labels = "block text-large font-medium text-gray-700 mb-2";
+    var diagram =`
+classDiagram
+class GeoPointType {
+ <<enumeration>>
+  BROWNFIELD
+  OGWELL
+  CELL_TOWER
+  NUCLEAR_REACTOR
+  SUPERFUND
+}
+class GeoPoint {
+  -UUID id
+  +GeoPointType type
+  +GeographyPoint location
+  -UUID metadata references metadata(id)
+  +Datetime createdAt
+}
+class GeographyPoint {
+  <<interface>>
+  +GeoJSON geojson
+  +Int srid
+  +Float longitude
+  +Float latitude
+}
+class NearbyPoint {
+ <<Interface>>
+  -UUID id references GeoPoint(id)
+  +GeoPointType GeoPoint::type
+  +GeographyPoint GeoPoint::location
+  +UUID GeoPoint::metadata
+  +Float distance
+}
+class NearbyPoints {
+<<Service>>
+  +GeoJSON origin
+  +Float radiusMi
+  +Int first
+  +Int last
+  +Int offset
+  +Cursor before
+  +Cursor after
+}
+class Hotel {
+ -UUID id
++String name
+-Int objectid 
+}
+GeoPoint *-- GeoPointType: Composition
+GeoPoint *-- GeographyPoint: Composition
+GeoPoint "1" <|-- "1" NearbyPoint: Implements
+NearbyPoints "1" -- "0..n"NearbyPoint: Contains
+Hotel "1" -- "1" GeoPoint: May Contain
+    
+    `;
     return(<>
       <button onClick={handleBack}><ChevronLeftIcon className={backBtnCss}/></button>
       <div className={rowCss}><div className={labels}>Title:</div>{!titleEdit?<>{task?.title}<PencilIcon onClick={handleTitleEdit} className={editBtnCss}/></>:<><input type='text' className="border border-gray-300" value={task.title} name='title' onChange={handleChange} placeholder='enter title'/><SignalIcon onClick={handleTitleEdit} className={editBtnCss}/></>}</div>
@@ -102,6 +158,7 @@ const TaskView=()=>{
       <div className={rowCss}><div className={labels}>Task Creation date:</div> {formatDateTime(task?.created_at)}</div>
       <div className={rowCss}><div className={labels}>In Progress date:</div>{formatDateTime(task?.in_progress_at)}</div>
       <div className={rowCss}><div className={labels}>Completion Date:</div>{formatDateTime(task?.completed_at)}</div>
+      <div><div className={labels}>Task Map:</div></div><div className={getCss('overflow-content')}><Mermaid chart={diagram}/></div>
       <button className="bg-red-800 rounded-lg" onClick={handleDelete}>DELETE</button>
       </>);
 }
