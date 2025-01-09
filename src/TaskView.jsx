@@ -18,6 +18,7 @@ const TaskView=()=>{
   const[domains,setDomains] = useState([]);
   const [titleEdit,setTitleEdit] = useState(false);
   const [domainEdit,setDomainEdit] = useState(false);
+  const [diagramEdit,setDiagramEdit] = useState(false);
   const { id } = useParams();
   const[task,setTask] = useState(
     {
@@ -28,6 +29,7 @@ const TaskView=()=>{
       'description': null,
       'priority': null,
       'status': null,
+      'diagram': null,
       'domain_name':null
     }
   );
@@ -43,8 +45,7 @@ const TaskView=()=>{
   }
 
   const fetchById=async()=>{
-    getById(parseInt(id),getStoreName('task_store')).then((a)=>{
-      console.log(a);
+      getById(parseInt(id),getStoreName('task_store')).then((a)=>{
       setTask(a);
     });
   }
@@ -55,6 +56,13 @@ const TaskView=()=>{
   const handleTitleEdit=async()=>{
     setTitleEdit(!titleEdit);
     if(titleEdit){
+      await updateData(task,getStoreName('task_store'));
+      await fetchById;
+    }
+  }
+  const handleDiagramEdit=async()=>{
+    setDiagramEdit(!diagramEdit);
+    if(diagramEdit){
       await updateData(task,getStoreName('task_store'));
       await fetchById;
     }
@@ -86,60 +94,7 @@ const TaskView=()=>{
     //var rowCss = "flex items-center space-x-4 mb-4";
     var rowCss = "flex items-center space-x-4 mb-4 p-2 rounded-lg bg-gray-100 hover:bg-gray-200 transition-all duration-300";
     var labels = "block text-large font-medium text-gray-700 mb-2";
-    var diagram =`
-classDiagram
-class GeoPointType {
- <<enumeration>>
-  BROWNFIELD
-  OGWELL
-  CELL_TOWER
-  NUCLEAR_REACTOR
-  SUPERFUND
-}
-class GeoPoint {
-  -UUID id
-  +GeoPointType type
-  +GeographyPoint location
-  -UUID metadata references metadata(id)
-  +Datetime createdAt
-}
-class GeographyPoint {
-  <<interface>>
-  +GeoJSON geojson
-  +Int srid
-  +Float longitude
-  +Float latitude
-}
-class NearbyPoint {
- <<Interface>>
-  -UUID id references GeoPoint(id)
-  +GeoPointType GeoPoint::type
-  +GeographyPoint GeoPoint::location
-  +UUID GeoPoint::metadata
-  +Float distance
-}
-class NearbyPoints {
-<<Service>>
-  +GeoJSON origin
-  +Float radiusMi
-  +Int first
-  +Int last
-  +Int offset
-  +Cursor before
-  +Cursor after
-}
-class Hotel {
- -UUID id
-+String name
--Int objectid 
-}
-GeoPoint *-- GeoPointType: Composition
-GeoPoint *-- GeographyPoint: Composition
-GeoPoint "1" <|-- "1" NearbyPoint: Implements
-NearbyPoints "1" -- "0..n"NearbyPoint: Contains
-Hotel "1" -- "1" GeoPoint: May Contain
     
-    `;
     return(<>
       <button onClick={handleBack}><ChevronLeftIcon className={backBtnCss}/></button>
       <div className={rowCss}><div className={labels}>Title:</div>{!titleEdit?<>{task?.title}<PencilIcon onClick={handleTitleEdit} className={editBtnCss}/></>:<><input type='text' className="border border-gray-300" value={task.title} name='title' onChange={handleChange} placeholder='enter title'/><SignalIcon onClick={handleTitleEdit} className={editBtnCss}/></>}</div>
@@ -158,7 +113,7 @@ Hotel "1" -- "1" GeoPoint: May Contain
       <div className={rowCss}><div className={labels}>Task Creation date:</div> {formatDateTime(task?.created_at)}</div>
       <div className={rowCss}><div className={labels}>In Progress date:</div>{formatDateTime(task?.in_progress_at)}</div>
       <div className={rowCss}><div className={labels}>Completion Date:</div>{formatDateTime(task?.completed_at)}</div>
-      <div><div className={labels}>Task Map:</div></div><div className={getCss('overflow-content')}><Mermaid chart={diagram}/></div>
+      <div><div className={labels}>Task Map:</div></div>{!diagramEdit?<div className="flex items-center"><div className={getCss('overflow-content')}><Mermaid chart={task.diagram}/></div><PencilIcon onClick={handleDiagramEdit} className={editBtnCss}/></div>:<div className={rowCss}><textarea className="border border-gray-300 caret-gray-900 caret-2" value={task.diagram} name="diagram" rows="12" cols="90" placeholder='enter mermaid code' onChange={handleChange}/><SignalIcon onClick={handleDiagramEdit} className={editBtnCss}/></div>}
       <button className="bg-red-800 rounded-lg" onClick={handleDelete}>DELETE</button>
       </>);
 }

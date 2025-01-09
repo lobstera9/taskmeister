@@ -33,7 +33,6 @@ const Persistence=()=>{
   }
 
   var importData=async()=>{
-    debugger;
     console.log('importing data');
     console.log(getStoreName('file_store'));
     importDump(fileContent);
@@ -42,7 +41,6 @@ const Persistence=()=>{
   }
 
   const exportData = async(data) => {
-    debugger;
     var file = await getAllData(getStoreName('file_store'));
     var fileName = file[0];
     let importedFileName = fileName?fileName.fileName:'TaskMeister.json';

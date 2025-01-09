@@ -38,7 +38,6 @@ export const addData =async(object, store)=>{
     console.log("Initiating a db open request for Schema ",schema," with veriosn ",cur_version," to save object ",object," in store ",store);
     var request = await indexedDB.open(schema,cur_version);
     request.onsuccess=(event)=>{
-      debugger;
       var db = event.target.result;
       var transaction = db.transaction([store],"readwrite");
       var objectStore = transaction.objectStore(store);
@@ -47,11 +46,9 @@ export const addData =async(object, store)=>{
 
     }
     request.onerror=(event)=>{
-      debugger;
       new Error("unable to open database");
     }
   }catch(e){
-    debugger;
     console.log(e);
   }
 }

@@ -9,7 +9,7 @@ export const compCss = new Map([
   ['btnNew',"bg-gray-900 text-white p-2 rounded hover:bg-gray-600"],
   ['btnClear',"bg-red-500 text-white p-2 rounded hover:bg-gray-600"],
   ['btnEdit',"h-5 w-5 text-lime-100 bg-gray-900 rounded-lg"],
-  ['overflow-content',"border-2 border-gray-300 h-[800px] w-[1200px] overflow-auto flex items-center space-x-4 mb-4 p-2 rounded-lg bg-gray-100 hover:bg-gray-200 transition-all duration-300"]
+  ['overflow-content',"border-2 border-gray-300 h-[800px] w-[1200px] overflow-auto flex"]
 ])
 
 export const getCss = (name)=>{

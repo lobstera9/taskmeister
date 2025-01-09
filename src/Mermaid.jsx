@@ -1,7 +1,8 @@
 import mermaid from 'mermaid';
-import React, { useEffect,useRef } from 'react';
+import React, { useEffect,useState,useRef } from 'react';
 
 const Mermaid =({chart})=>{
+  const[data,setData] = useState(chart);
   const mermaidRef = useRef(null);
   useEffect(()=>{
     if(mermaidRef.current){
@@ -14,9 +15,9 @@ const Mermaid =({chart})=>{
       mermaidElement.style.width = "100%";  // Make it 100% width
       mermaidElement.style.height = "1000px";
     }
-  },[chart]);
+  },[data]);
   return (<div ref={mermaidRef} className="mermaid">
-      {chart}
+      {data}
     </div>)
 }
 export default Mermaid;
