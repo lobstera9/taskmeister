@@ -16,8 +16,12 @@ const Mermaid =({chart})=>{
       mermaidElement.style.height = "1000px";
     }
   },[data]);
-  return (<div ref={mermaidRef} className="mermaid">
+  if(data && data!==""){
+    return (<div ref={mermaidRef} className="mermaid">
       {data}
-    </div>)
+      </div>);
+  }else{
+    return(<></>);
+  }
 }
 export default Mermaid;
