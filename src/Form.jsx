@@ -6,6 +6,7 @@ import { SignalIcon } from '@heroicons/react/24/solid';
 import { priority,getCss } from './Constants.js';
 import Card from './Card';
 import Persistence from './Persistence';
+import Statistics from './Statistics';
 
 const Form=()=>{
   const [task, setTask] = useState({'title':'','domain_name':'','description':'','priority':0,'status':'PENDING','created_at':'','in_progress_at':'','completed_at':''});
@@ -127,6 +128,9 @@ const Form=()=>{
         <Persistence/>
       </div>
       </div>
+    <div id="stats-section" className="p-2 border border-gray-300 w-[1000px]">
+      <Statistics tasks={taskList}/>
+    </div>
     </div>
         </>)
 }
