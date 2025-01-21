@@ -10,9 +10,23 @@ export const compCss = new Map([
   ['btnClear',"bg-red-500 text-white p-2 rounded hover:bg-gray-600"],
   ['btnEdit',"h-5 w-5 text-lime-100 bg-gray-900 rounded-lg"],
   ['overflow-content',"border-2 border-gray-300 h-[800px] w-[1200px] overflow-auto flex"],
-  ['statistics',"border-2 border-gray-300 h-[800px] w-[1200px] overflow-auto flex"]
+  ['statistics',"border-2 border-gray-300 h-[800px] w-[900px] overflow-auto"],
+  ['flex-content-2-items',"flex flex-wrap"],
+  ['flex-item-half-space',"w-1/2 p-2"]
 ])
 
 export const getCss = (name)=>{
   return compCss.get(name);
+}
+
+export const chartGroups = [
+                            {key:'created_at',chartTitle:'Total number of tasks on date',display:'Stats By creation Date'},
+                            { key:'in_progress_at',chartTitle:'Total number of tasks on date',display:'Stats By In progress Date'},
+                            { key:'completed_at',chartTitle:'Total number of tasks on date',display:'Stats By completion Date'},
+                            { key:'domain_name',chartTitle:'Total number of tasks by domain',display:'Stats By domain'},
+                            { key:'status',chartTitle:'Total number of tasks by status',display:'Stats by status'}
+                            ]
+export const chartTypes = ['line','bar','area'];
+export const getChartTitleByKey=(key)=>{
+  return chartGroups.find(a=>a.key===key)?.chartTitle;
 }

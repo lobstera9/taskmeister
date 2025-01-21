@@ -3,6 +3,9 @@ export const formatDate=(dt)=>{
     return '';
   }
   var date = new Date(dt);
+  if(isNaN(date.getTime())){
+    return dt;
+  }
   // Get the full year (4 digits)
   const year = date.getFullYear();
 
@@ -21,6 +24,9 @@ export const formatDateTime = (dt) => {
     return '';
   }
   var date = new Date(dt);
+
+  if(isNaN(date.getTime()))
+    return dt;
   // Get the full year (4 digits)
   const year = date.getFullYear();
 
