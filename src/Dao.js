@@ -181,6 +181,7 @@ export const exportDump = async () => {
 	});
 };
 export const reInitializeStore = async () => {
+	clearSchema();
 	var request = indexedDB.open(schema, cur_version);
 	request.onsuccess = (event) => {
 		var db = event.target.result;
@@ -206,3 +207,20 @@ export const clearTable = async (store) => {
 		new Error("unable to open database");
 	};
 };
+
+export const clearSchema = async () =>{
+	var request = await indexedDB.open(schema,cur_version);
+	request.onsuccess=(event)=>{
+		var db = event.target.result;
+		var transaction = db.transaction(db.objectStoreNames,"readwrite");
+		var stores =  db.objectStoreNames;
+		for(var store of stores){
+			db.deleteObjectStore(store);
+		}
+		transaction.commit();
+	};
+	request.onerror = (event)=>{
+		console.log(event.target.error);
+		new Error("unable to open database");
+	};
+}

@@ -5,6 +5,7 @@ import {
 	exportDump,
 	getAllData,
 	importDump,
+	clearSchema,
 	reInitializeStore,
 } from "./Dao.js";
 import { getStoreName } from "./DaoConst.js";
@@ -42,6 +43,7 @@ const Persistence = () => {
 	var importData = async () => {
 		console.log("importing data");
 		console.log(getStoreName("file_store"));
+		clearSchema();
 		importDump(fileContent);
 		await addData(fileName, getStoreName("file_store"));
 		window.location.reload();
