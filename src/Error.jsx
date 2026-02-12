@@ -1,8 +1,0 @@
-const Error = () => {
-	return (
-		<h1 className="place-self-center">
-			ERROR: The page you are looking for does not exist
-		</h1>
-	);
-};
-export default Error;
