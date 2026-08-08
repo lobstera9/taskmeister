@@ -1,7 +1,11 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes,useParams } from "react-router-dom";
 import Error from "./Error";
 import Form from "./Form";
 import TaskView from "./TaskView";
+const TaskViewWrapper = () => {
+  const { id } = useParams();
+  return <TaskView key={id} />;
+};
 function App() {
 	return (
 		<div className="font-mono text-2xl antialiased ">
@@ -9,7 +13,7 @@ function App() {
 				<Routes>
 					<Route path="/" element={<Form />} />
 					<Route path="/form" element={<Form />} />
-					<Route path="/taskview/:id" element={<TaskView />} />
+					<Route path="/taskview/:id" element={<TaskViewWrapper />} />
 					<Route path="*" element={<Error />} />
 				</Routes>
 			</BrowserRouter>
